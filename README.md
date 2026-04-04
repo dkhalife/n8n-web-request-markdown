@@ -8,7 +8,7 @@ This node can also be used as an **AI Agent tool** in n8n's AI workflows, enabli
 
 ## Features
 
-- **HTTP Request parity** — Supports GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS methods with full query parameter, header, and body configuration
+- **HTTP Request support** — Supports GET and POST methods with full query parameter, header, and body configuration
 - **HTML → Markdown conversion** — Automatically converts HTML responses to clean, readable Markdown
 - **Preserves document structure** — Headings (h1–h6), lists, tables, links, images, code blocks, and blockquotes are all preserved
 - **Strips metadata** — Removes `<script>`, `<style>`, `<meta>`, `<iframe>`, `<svg>`, and other non-content elements
@@ -55,7 +55,7 @@ Then restart n8n.
 #### Core
 | Parameter | Description |
 |-----------|-------------|
-| Method | HTTP method (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS) |
+| Method | HTTP method (GET, POST) |
 | URL | The target URL (required) |
 | Authentication | None, or Generic Credential Type (Basic, Header, Query, Digest, OAuth2) |
 
@@ -80,7 +80,6 @@ Then restart n8n.
 | Parameter | Default | Description |
 |-----------|---------|-------------|
 | Follow Redirects | `true` | Follow HTTP redirects |
-| Max Redirects | `21` | Maximum redirect hops |
 | Ignore SSL Issues | `false` | Skip SSL certificate validation |
 | Timeout | `30000` | Request timeout in milliseconds |
 | Include Response Headers | `false` | Include headers and status in output |

@@ -469,7 +469,7 @@ export class WebRequestMarkdown implements INodeType {
 					} else {
 						const jsonQuery = this.getNodeParameter('jsonQuery', itemIndex, '{}') as string;
 						try {
-							requestOptions.qs = JSON.parse(jsonQuery);
+							requestOptions.qs = JSON.parse(jsonQuery.trim() || '{}');
 						} catch {
 							throw new NodeOperationError(
 								this.getNode(),
@@ -502,7 +502,7 @@ export class WebRequestMarkdown implements INodeType {
 					} else {
 						const jsonHeaders = this.getNodeParameter('jsonHeaders', itemIndex, '{}') as string;
 						try {
-							Object.assign(headers, JSON.parse(jsonHeaders));
+							Object.assign(headers, JSON.parse(jsonHeaders.trim() || '{}'));
 						} catch {
 							throw new NodeOperationError(
 								this.getNode(),
@@ -541,7 +541,7 @@ export class WebRequestMarkdown implements INodeType {
 						} else {
 							const jsonBody = this.getNodeParameter('jsonBody', itemIndex, '{}') as string;
 							try {
-								requestOptions.body = JSON.parse(jsonBody);
+								requestOptions.body = JSON.parse(jsonBody.trim() || '{}');
 								requestOptions.json = true;
 							} catch {
 								throw new NodeOperationError(
@@ -575,7 +575,7 @@ export class WebRequestMarkdown implements INodeType {
 				if (options.allowUnauthorizedCerts) {
 					requestOptions.skipSslCertificateValidation = true;
 				}
-				if (options.timeout) {
+				if (options.timeout !== undefined) {
 					requestOptions.timeout = options.timeout as number;
 				}
 
