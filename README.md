@@ -119,8 +119,8 @@ With **Include Response Headers** enabled:
 ### Setup
 
 ```bash
-git clone https://github.com/your-username/n8n-nodes-web-request-markdown.git
-cd n8n-nodes-web-request-markdown
+git clone https://github.com/dkhalife/n8n-web-request-markdown.git
+cd n8n-web-request-markdown
 npm install
 npm run build
 ```

@@ -3,17 +3,17 @@
 	"version": "0.1.0",
 	"description": "n8n community node that makes HTTP requests and returns the response as clean Markdown instead of raw HTML",
 	"license": "MIT",
-	"homepage": "https://github.com/n8n-nodes-web-request-markdown",
+	"homepage": "https://github.com/dkhalife/n8n-web-request-markdown",
 	"keywords": [
 		"n8n-community-node-package"
 	],
 	"author": {
-		"name": "n8n-web-request-markdown",
-		"email": ""
+		"name": "dkhalife",
+		"url": "https://github.com/dkhalife"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/n8n-nodes-web-request-markdown.git"
+		"url": "https://github.com/dkhalife/n8n-web-request-markdown.git"
 	},
 	"scripts": {
 		"build": "tsc && gulp build:icons",
