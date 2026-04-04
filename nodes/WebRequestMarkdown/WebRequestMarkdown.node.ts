@@ -4,7 +4,7 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 	IHttpRequestMethods,
-	IRequestOptions,
+	IHttpRequestOptions,
 	IDataObject,
 } from 'n8n-workflow';
 import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
@@ -131,8 +131,8 @@ export class WebRequestMarkdown implements INodeType {
 					{ name: 'Basic Auth', value: 'httpBasicAuth' },
 					{ name: 'Digest Auth', value: 'httpDigestAuth' },
 					{ name: 'Header Auth', value: 'httpHeaderAuth' },
-					{ name: 'Query Auth', value: 'httpQueryAuth' },
 					{ name: 'OAuth2', value: 'oAuth2Api' },
+					{ name: 'Query Auth', value: 'httpQueryAuth' },
 				],
 				default: 'httpBasicAuth',
 			},
@@ -324,15 +324,16 @@ export class WebRequestMarkdown implements INodeType {
 				default: {},
 				options: [
 					{
-						displayName: 'Heading Style',
-						name: 'headingStyle',
+						displayName: 'Bullet List Marker',
+						name: 'bulletListMarker',
 						type: 'options',
 						options: [
-							{ name: 'ATX (# Heading)', value: 'atx' },
-							{ name: 'Setext (Underlined)', value: 'setext' },
+							{ name: 'Dash (-)', value: '-' },
+							{ name: 'Asterisk [All]', value: '*' },
+							{ name: 'Plus (+)', value: '+' },
 						],
-						default: 'atx',
-						description: 'Style used for converting headings',
+						default: '-',
+						description: 'Character used for unordered list items',
 					},
 					{
 						displayName: 'Code Block Style',
@@ -346,24 +347,22 @@ export class WebRequestMarkdown implements INodeType {
 						description: 'Style used for converting code blocks',
 					},
 					{
-						displayName: 'Bullet List Marker',
-						name: 'bulletListMarker',
+						displayName: 'Heading Style',
+						name: 'headingStyle',
 						type: 'options',
 						options: [
-							{ name: 'Dash (-)', value: '-' },
-							{ name: 'Asterisk (*)', value: '*' },
-							{ name: 'Plus (+)', value: '+' },
+							{ name: 'ATX (# Heading)', value: 'atx' },
+							{ name: 'Setext (Underlined)', value: 'setext' },
 						],
-						default: '-',
-						description: 'Character used for unordered list items',
+						default: 'atx',
+						description: 'Style used for converting headings',
 					},
 					{
-						displayName: 'Strip Navigation & Footer',
-						name: 'stripNavFooter',
+						displayName: 'Include Images',
+						name: 'includeImages',
 						type: 'boolean',
 						default: true,
-						description:
-							'Whether to remove <nav>, <footer>, <aside>, and <header> elements from the HTML before conversion',
+						description: 'Whether to keep images in the Markdown output',
 					},
 					{
 						displayName: 'Include Links',
@@ -373,11 +372,12 @@ export class WebRequestMarkdown implements INodeType {
 						description: 'Whether to keep hyperlinks in the Markdown output',
 					},
 					{
-						displayName: 'Include Images',
-						name: 'includeImages',
+						displayName: 'Strip Navigation & Footer',
+						name: 'stripNavFooter',
 						type: 'boolean',
 						default: true,
-						description: 'Whether to keep images in the Markdown output',
+						description:
+							'Whether to remove &lt;nav&gt;, &lt;footer&gt;, &lt;aside&gt;, and &lt;header&gt; elements from the HTML before conversion',
 					},
 				],
 			},
@@ -398,27 +398,12 @@ export class WebRequestMarkdown implements INodeType {
 						description: 'Whether to follow all redirects',
 					},
 					{
-						displayName: 'Max Redirects',
-						name: 'maxRedirects',
-						type: 'number',
-						displayOptions: { show: { followRedirects: [true] } },
-						default: 21,
-						description: 'Max number of redirects to follow',
-					},
-					{
 						displayName: 'Ignore SSL Issues (Insecure)',
 						name: 'allowUnauthorizedCerts',
 						type: 'boolean',
 						default: false,
 						description:
-							'Whether to download the response even if SSL certificate validation is not possible',
-					},
-					{
-						displayName: 'Timeout',
-						name: 'timeout',
-						type: 'number',
-						default: 30000,
-						description: 'Time in milliseconds to wait for the server to send a response before aborting the request',
+							'Whether to connect even if SSL certificate validation is not possible',
 					},
 					{
 						displayName: 'Include Response Headers',
@@ -427,6 +412,13 @@ export class WebRequestMarkdown implements INodeType {
 						default: false,
 						description:
 							'Whether to include the full response (headers and status code) in the output',
+					},
+					{
+						displayName: 'Timeout',
+						name: 'timeout',
+						type: 'number',
+						default: 30000,
+						description: 'Time in milliseconds to wait for the server to send a response before aborting the request',
 					},
 				],
 			},
@@ -456,11 +448,11 @@ export class WebRequestMarkdown implements INodeType {
 				const options = this.getNodeParameter('options', itemIndex, {}) as IDataObject;
 
 				// Build request options
-				const requestOptions: IRequestOptions = {
+				const requestOptions: IHttpRequestOptions = {
 					method,
-					uri: url,
-					resolveWithFullResponse: true,
-					simple: false,
+					url,
+					returnFullResponse: true,
+					ignoreHttpStatusErrors: true,
 				};
 
 				// Query parameters
@@ -494,7 +486,7 @@ export class WebRequestMarkdown implements INodeType {
 				}
 
 				// Headers
-				const headers: IDataObject = {};
+				const headers: Record<string, string> = {};
 				if (sendHeaders) {
 					const specifyHeaders = this.getNodeParameter(
 						'specifyHeaders',
@@ -582,12 +574,11 @@ export class WebRequestMarkdown implements INodeType {
 
 				// HTTP Options
 				const followRedirects = options.followRedirects !== undefined ? options.followRedirects : true;
-				requestOptions.followRedirect = followRedirects as boolean;
-				if (followRedirects && options.maxRedirects) {
-					requestOptions.maxRedirects = options.maxRedirects as number;
+				if (!followRedirects) {
+					requestOptions.disableFollowRedirect = true;
 				}
 				if (options.allowUnauthorizedCerts) {
-					requestOptions.rejectUnauthorized = false;
+					requestOptions.skipSslCertificateValidation = true;
 				}
 				if (options.timeout) {
 					requestOptions.timeout = options.timeout as number;
@@ -601,13 +592,13 @@ export class WebRequestMarkdown implements INodeType {
 						itemIndex,
 						'httpBasicAuth',
 					) as string;
-					response = await this.helpers.requestWithAuthentication.call(
+					response = await this.helpers.httpRequestWithAuthentication.call(
 						this,
 						genericAuthType,
 						requestOptions,
 					);
 				} else {
-					response = await this.helpers.request(requestOptions);
+					response = await this.helpers.httpRequest(requestOptions);
 				}
 
 				// Parse response
@@ -700,7 +691,7 @@ function convertHtmlToMarkdown(html: string, options: IDataObject): string {
 	$('[aria-hidden="true"]').remove();
 
 	// Get cleaned HTML body content
-	let cleanedHtml = $('body').html() || $.html();
+	const cleanedHtml = $('body').html() || $.html();
 
 	// Step 2: Convert to Markdown with Turndown
 	const turndownService = new TurndownService({
