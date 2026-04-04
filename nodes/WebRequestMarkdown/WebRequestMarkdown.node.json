@@ -1,0 +1,14 @@
+{
+	"node": "n8n-nodes-web-request-markdown.webRequestMarkdown",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Utility", "Development", "AI"],
+	"resources": {
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/dkhalife/n8n-web-request-markdown"
+			}
+		]
+	},
+	"alias": ["HTTP", "Request", "Markdown", "HTML", "Fetch", "Web", "Scrape", "Convert"]
+}
