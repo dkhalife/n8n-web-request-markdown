@@ -82,13 +82,8 @@ export class WebRequestMarkdown implements INodeType {
 				name: 'method',
 				type: 'options',
 				options: [
-					{ name: 'DELETE', value: 'DELETE' },
 					{ name: 'GET', value: 'GET' },
-					{ name: 'HEAD', value: 'HEAD' },
-					{ name: 'OPTIONS', value: 'OPTIONS' },
-					{ name: 'PATCH', value: 'PATCH' },
 					{ name: 'POST', value: 'POST' },
-					{ name: 'PUT', value: 'PUT' },
 				],
 				default: 'GET',
 				description: 'The request method to use',
