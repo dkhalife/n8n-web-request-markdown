@@ -4,8 +4,14 @@
   "description": "n8n community node that makes HTTP requests and returns the response as clean Markdown instead of raw HTML",
   "license": "MIT",
   "homepage": "https://github.com/dkhalife/n8n-web-request-markdown",
-  "keywords": ["n8n-community-node-package"],
-  "author": { "name": "dkhalife", "url": "https://github.com/dkhalife" },
+  "keywords": [
+    "n8n-community-node-package"
+  ],
+  "packageManager": "yarn@4.16.0",
+  "author": {
+    "name": "dkhalife",
+    "url": "https://github.com/dkhalife"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/dkhalife/n8n-web-request-markdown.git"
@@ -19,17 +25,22 @@
     "release": "n8n-node release",
     "prepublishOnly": "n8n-node prerelease"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "n8n": {
     "n8nNodesApiVersion": 1,
     "strict": false,
     "credentials": [],
-    "nodes": ["dist/nodes/WebRequestMarkdown/WebRequestMarkdown.node.js"]
+    "nodes": [
+      "dist/nodes/WebRequestMarkdown/WebRequestMarkdown.node.js"
+    ]
   },
   "devDependencies": {
     "@n8n/node-cli": "*",
     "@types/turndown": "^5.0.5",
     "eslint": "9.39.4",
+    "n8n-workflow": "*",
     "prettier": "3.8.1",
     "release-it": "19.2.4",
     "typescript": "5.9.3"
@@ -39,5 +50,7 @@
     "turndown": "^7.2.0",
     "turndown-plugin-gfm": "^1.0.2"
   },
-  "peerDependencies": { "n8n-workflow": "*" }
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
 }

@@ -113,15 +113,16 @@ With **Include Response Headers** enabled:
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) v18+
-- [npm](https://www.npmjs.com/) or [pnpm](https://pnpm.io/)
+- [Yarn](https://yarnpkg.com/) (modern/Berry, managed via [Corepack](https://nodejs.org/api/corepack.html))
 
 ### Setup
 
 ```bash
 git clone https://github.com/dkhalife/n8n-web-request-markdown.git
 cd n8n-web-request-markdown
-npm install
-npm run build
+corepack enable
+yarn install
+yarn build
 ```
 
 ### Testing Locally with n8n
@@ -129,11 +130,11 @@ npm run build
 ```bash
 # Link the package
 cd /path/to/n8n-nodes-web-request-markdown
-npm link
+yarn link
 
 # Link in n8n's custom extensions directory
 cd ~/.n8n/custom
-npm link n8n-nodes-web-request-markdown
+yarn link /path/to/n8n-nodes-web-request-markdown
 
 # Restart n8n
 n8n start
