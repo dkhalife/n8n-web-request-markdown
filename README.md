@@ -134,7 +134,7 @@ yarn link
 
 # Link in n8n's custom extensions directory
 cd ~/.n8n/custom
-yarn link n8n-nodes-web-request-markdown
+yarn link /path/to/n8n-nodes-web-request-markdown
 
 # Restart n8n
 n8n start
